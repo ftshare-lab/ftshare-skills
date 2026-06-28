@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+"""查询东财板块成分股"""
+import argparse
+import json
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+SAFE_URLOPENER = urllib.request.build_opener()
+
+BASE_URL = "https://market.ft.tech"
+
+def safe_urlopen(req_or_url):
+    if isinstance(req_or_url, urllib.request.Request):
+        url = req_or_url.full_url
+    else:
+        url = str(req_or_url)
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https" or parsed.netloc != "market.ft.tech":
+        print(f"Invalid URL for safe_urlopen: {url}", file=sys.stderr)
+        sys.exit(1)
+    return SAFE_URLOPENER.open(req_or_url)
+
+ENDPOINT = "/gateway/api/v1/market/data/eastmoney-board-constituents"
+
+
+def fetch(board_code: str) -> dict:
+    params = urllib.parse.urlencode({"board_code": board_code})
+    url = f"{BASE_URL}{ENDPOINT}?{params}"
+    try:
+        with safe_urlopen(url) as resp:
+            return json.loads(resp.read().decode())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        print(f"HTTP {e.code}: {body}", file=sys.stderr)
+        sys.exit(1)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="查询东财板块成分股")
+    parser.add_argument("--board_code", required=True, help="板块代码（BK 前缀），如 BK1024")
+    args = parser.parse_args()
+
+    result = fetch(args.board_code)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()

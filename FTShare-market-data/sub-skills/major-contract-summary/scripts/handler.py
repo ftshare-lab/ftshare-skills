@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+"""近一年 A 股个股重大合同汇总排名（market.ft.tech）"""
+import argparse
+import json
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
+SAFE_URLOPENER = urllib.request.build_opener()
+
+BASE_URL = "https://market.ft.tech"
+
+def safe_urlopen(req_or_url):
+    if isinstance(req_or_url, urllib.request.Request):
+        url = req_or_url.full_url
+    else:
+        url = str(req_or_url)
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https" or parsed.netloc != "market.ft.tech":
+        print(f"Invalid URL for safe_urlopen: {url}", file=sys.stderr)
+        sys.exit(1)
+    return SAFE_URLOPENER.open(req_or_url)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="近一年个股重大合同汇总排名")
+    parser.add_argument("--page", type=int, default=None, help="页码，从 1 开始")
+    parser.add_argument("--page_size", type=int, default=None, help="每页数量，默认 50，最大 200")
+    args = parser.parse_args()
+
+    params = {}
+    if args.page is not None:
+        params["page"] = args.page
+    if args.page_size is not None:
+        params["page_size"] = args.page_size
+
+    path = "/gateway/api/v1/market/data/corporate/contract/summary"
+    if params:
+        path += "?" + urllib.parse.urlencode(params)
+    url = BASE_URL + path
+
+    req = urllib.request.Request(url, method="GET")
+    req.add_header("Content-Type", "application/json")
+
+    try:
+        with safe_urlopen(req) as resp:
+            data = json.loads(resp.read().decode())
+        print(json.dumps(data, ensure_ascii=False, indent=2))
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        print(f"HTTP {e.code}: {body}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
