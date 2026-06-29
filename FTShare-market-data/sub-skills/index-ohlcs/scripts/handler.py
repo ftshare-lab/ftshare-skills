@@ -51,7 +51,7 @@ def build_params(symbol: str, since: str, until: str, interval: str = "Day", adj
     if not _DATE_RE.match(until):
         raise ValueError(f"until 需为 YYYYMMDD（8 位数字）: {until!r}")
     params = {"symbol": symbol, "since": since, "until": until, "interval": interval}
-    if adjust is not None:
+    if adjust and adjust != "None":
         params["adjust"] = adjust
     return params
 
@@ -126,9 +126,9 @@ def main():
     )
     parser.add_argument(
         "--adjust",
-        default=None,
-        choices=["Forward", "Backward"],
-        help="复权类型：Forward（前复权）、Backward（后复权）；不传为不复权",
+        default="Forward",
+        choices=["Forward", "Backward", "None"],
+        help="复权类型：Forward（前复权，默认）、Backward（后复权）、None（不复权）",
     )
     args = parser.parse_args()
 

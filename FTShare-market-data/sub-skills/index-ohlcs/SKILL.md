@@ -26,7 +26,7 @@ description: 单只指数 OHLC K 线（market.ft.tech）。用户问某只指数
 | since | string | 是 | 起始日期 YYYYMMDD | 20240101 | - |
 | until | string | 否 | 结束日期 YYYYMMDD | 20240131 | 不传则默认今天 |
 | interval | string | 否 | K 线周期 | Day | Day（日线，默认）、Week（周线）、Month（月线）；无年线 |
-| adjust | string | 否 | 复权类型 | Forward | Forward（前复权）、Backward（后复权）；不传为不复权 |
+| adjust | string | 否 | 复权类型 | Forward | Forward（前复权，默认）、Backward（后复权）、None（不复权） |
 
 ## 3. 响应说明
 
@@ -71,6 +71,6 @@ python <RUN_PY> index-ohlcs --index 000001.XSHG --since 20230101 --interval Mont
 
 - `index`、`since` 为必填；`since`/`until` 需为 YYYYMMDD（8 位数字）
 - `interval` 仅支持 Day/Week/Month（daec 无年线）；不传默认 Day
-- `adjust` 可选 Forward/Backward，不传为不复权（v2 不支持选复权，daec 为增强）
+- `adjust` 可选 Forward/Backward/None，默认 Forward（前复权）；None 为不复权（v2 不支持选复权，daec 为增强）
 - 执行方式：脚本将每条 `open_ts_ms`/`close_ts_ms`（毫秒）转为北京时间 ISO 字符串（YYYY-MM-DDTHH:mm:ss）
 - **已知问题**：daec 大区间响应（如多年日线，~100KB+）服务端偶发传输中断（IncompleteRead），脚本内置 5 次指数退避重试；如仍失败会非零退出。建议按需缩小日期区间
