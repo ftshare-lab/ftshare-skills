@@ -102,28 +102,11 @@ FTShare-market-data/README.md
 - 如果需要标准 MCP 工具入口，应使用或等待 `ftshare-mcp`。
 - 本仓库重点是 Agent Skill，而不是传统 Python 包。
 
-## 贡献规范
+## Contributing
 
-提交新 Skill 或修改现有 Skill 时，请保持：
+欢迎提交新的数据级 Skill、业务级 Skill、文档改进和示例。
 
-- 每个 Skill 有独立 `SKILL.md`
-- 每个 Skill 包有自己的 `README.md`
-- 参数命名清晰
-- 示例命令可执行
-- 输出结构稳定，优先使用 JSON
-- 下载类接口限制输出路径
-- README 与实际能力保持同步
-- 数据级 Skill 与业务级 Skill 职责清晰分离
-
-建议新增业务级 Skill 时至少说明：
-
-- 适用场景
-- 输入参数
-- 调用的数据能力
-- 输出结构
-- 示例问题
-- 示例结果
-- 数据质量与风险提示
+贡献前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，其中包含 Skill 结构、文档要求、提交流程和安全注意事项。
 
 ## Related Projects
 
