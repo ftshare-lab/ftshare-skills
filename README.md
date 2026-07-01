@@ -1,5 +1,7 @@
 # FTShare Skills
 
+[中文](README.md) | [English](README_EN.md)
+
 ![Python 3](https://img.shields.io/badge/python-3.x-blue)
 ![Status](https://img.shields.io/badge/status-early_stage-orange)
 
